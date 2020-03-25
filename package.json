@@ -23,7 +23,10 @@
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-vue": "^6.2.2",
+<<<<<<< HEAD
     "husky": "^4.2.3",
+=======
+>>>>>>> feature: 项目初始化（init project）
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
