@@ -1,15 +1,11 @@
 <template>
   <div>
-      
   </div>
 </template>
-
 <script>
 export default {
-
-}
+  name: 'ApiList',
+};
 </script>
-
-<style>
-
+<style lang="less">
 </style>

@@ -7,12 +7,7 @@ module.exports = {
   lintOnSave: true,
   chainWebpack: (config) => {
     config.resolve.alias
-      .set('@$', resolve('src'))
-      .set('assets', resolve('src/assets'))
-      .set('components', resolve('src/components'))
-      .set('layout', resolve('src/layout'))
-      .set('base', resolve('src/base'))
-      .set('static', resolve('src/static'));
+      .set('@$', resolve('src'));
     config.resolve.symlinks(true);
   },
   configureWebpack: {

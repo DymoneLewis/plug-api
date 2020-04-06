@@ -1,4 +1,12 @@
 module.exports = {
+  root: true,
+  'settings': {
+    "import/resolver": {
+      "webpack": {
+      "config": "node_modules/@vue/cli-service/webpack.config.js"
+      }
+    }
+  },
   env: {
     browser: true,
     es6: true,
@@ -20,6 +28,11 @@ module.exports = {
     'vue',
   ],
   rules: {
-    "linebreak-style": [0 ,"error", "windows"]
+    "linebreak-style": [0 ,"error", "windows"],
+    'import/extensions': ['error', 'always', {
+      'js': 'never',
+      'vue': 'never'
+      }
+    ]
   },
 };

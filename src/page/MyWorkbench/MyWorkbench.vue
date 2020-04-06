@@ -1,19 +1,11 @@
 <template>
-  <div id="app">
-    <router-view/>
+  <div>
   </div>
 </template>
-
 <script>
-
 export default {
-  name: 'App',
+  name: 'ApiList',
 };
 </script>
-
 <style lang="less">
-body {
-  margin: 0;
-  padding: 0;
-}
 </style>
