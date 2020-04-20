@@ -12,4 +12,17 @@ module.exports = {
   },
   configureWebpack: {
   },
+  // baseUrl: '/',
+  devServer: {
+    proxy: {
+      '/': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        ws: true,
+        // pathRewrite: {
+        //   '^/apis': '',
+        // },
+      },
+    },
+  },
 };

@@ -1,8 +1,10 @@
 <template>
-  <div>
+  <div class="login-container">
     <el-row :gutter="20">
       <el-col :span="12" :offset="6">
-        <UserInfoForm/>
+        <UserInfoForm
+          :isLogin="getAccountStatus"
+        />
       </el-col>
     </el-row>
   </div>
@@ -16,14 +18,19 @@ export default {
   components: {
     UserInfoForm,
   },
+  computed: {
+    getAccountStatus() {
+      return this.$route.name === 'SignIn';
+    },
+  },
 };
 </script>
 
 <style lang="less">
 .el-row {
-  margin: 20px;
+  margin: 0;
   padding: 20px;
-  height: 100%;
+  // height: 100%;
   &:last-child {
     margin-bottom: 0;
   }
@@ -34,8 +41,11 @@ export default {
 .bg-purple {
   background: #d3dce6;
 }
-.grid-content {
-  border-radius: 4px;
-  padding: 20px;
+.login-container {
+  height: 740px;
+  // height: 100%;
+  width: 100%;
+  padding: 1% 0;
+  background-color: #f4f2fc;
 }
 </style>
