@@ -1,20 +1,16 @@
 <template>
   <div>
-    <ApiFilter/>
+    <ApiFilter
+      @filterApi="$_getApiInfo"
+    />
     <el-divider/>
+    <div v-show="apiList.length === 0">
+      <h2>No Data</h2>
+    </div>
     <div class="api-list">
       <el-row :gutter="20">
-        <el-col :span="12">
-          <ApiCard class="api-list-card"/>
-        </el-col>
-        <el-col :span="12">
-          <ApiCard class="api-list-card"/>
-        </el-col>
-        <el-col :span="12">
-          <ApiCard class="api-list-card"/>
-        </el-col>
-        <el-col :span="12">
-          <ApiCard class="api-list-card"/>
+        <el-col :span="12" v-for="item in apiList" :key="item.id">
+          <ApiCard :apiInfo="item" class="api-list-card"/>
         </el-col>
       </el-row>
     </div>
@@ -23,12 +19,30 @@
 <script>
 import ApiFilter from '@/components/ApiFilter';
 import ApiCard from '@/components/ApiCard';
+import * as apiServer from '@/service/api';
 
 export default {
   name: 'ApiList',
   components: {
     ApiFilter,
     ApiCard,
+  },
+  data() {
+    return {
+      apiList: [],
+    };
+  },
+  mounted() {
+    this.$_getApiInfo();
+  },
+  methods: {
+    $_getApiInfo(params = {}) {
+      apiServer.getHotApiInfo(params).then((res) => {
+        this.apiList = res.data;
+      }).catch((err) => {
+        throw err;
+      });
+    },
   },
 };
 </script>

@@ -8,14 +8,14 @@
      label-width="100px"
      label-position="top"
      class="userInfo-form">
-      <el-form-item label="账号" prop="name">
-        <el-input v-model="ruleForm.name" placeholder="请输入邮箱或手机号"></el-input>
+      <el-form-item label="账号" prop="username">
+        <el-input v-model="ruleForm.username" placeholder="请输入账号"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="ruleForm.password" placeholder="请输入密码"></el-input>
+        <el-input show-password v-model="ruleForm.password" placeholder="请输入密码"></el-input>
       </el-form-item>
       <el-form-item v-if="!isLogin" label="确认密码" prop="doubleCheck">
-        <el-input v-model="ruleForm.doubleCheck" placeholder="请重复输入密码"></el-input>
+        <el-input show-password v-model="ruleForm.doubleCheck" placeholder="请重复输入密码"></el-input>
       </el-form-item>
       <!-- <el-form-item v-if="isLogin" label="滑动验证">
         <SlideVerify/>
@@ -26,7 +26,7 @@
        plain
        type="primary"
        class="submit"
-       @click="$_jumpToOther(getSubmitText)">{{getSubmitText ? 'Log In' : 'Sign In'}}</el-button>
+       @click="$_submitForm()">{{getSubmitText ? 'Log In' : 'Sign In'}}</el-button>
       <el-button
        type="primary"
        plain
@@ -38,12 +38,15 @@
 </template>
 
 <script>
-import SlideVerify from '@/components/SlideVerification';
+import storejs from 'store';
+import { mapState } from 'vuex';
+// import SlideVerify from '@/components/SlideVerification';
+import * as userApi from '@/service/user';
 
 export default {
   name: 'userInfoForm',
   components: {
-    SlideVerify,
+    // SlideVerify,
   },
   props: {
     isLogin: {
@@ -52,6 +55,7 @@ export default {
     },
   },
   computed: {
+    ...mapState(['userInfo']),
     getSubmitText() {
       return this.$props.isLogin ? 1 : 0;
     },
@@ -59,12 +63,12 @@ export default {
   data() {
     return {
       ruleForm: {
-        name: '',
+        username: '',
         password: '',
         doubleCheck: '',
       },
       rules: {
-        name: [
+        username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
         ],
         password: [
@@ -77,6 +81,61 @@ export default {
     };
   },
   methods: {
+    $_submitForm() {
+      if (!this.ruleForm.username || !this.ruleForm.password) {
+        this.$notify.error({
+          title: '提示',
+          message: '用户名和密码不能为空',
+          offset: 100,
+        });
+        return;
+      }
+
+      if (this.getSubmitText) {
+        userApi.login(this.ruleForm).then((res) => {
+          if (res.data.errno !== 200) {
+            this.$notify.error({
+              title: '提示',
+              message: res.data.errmsg,
+              offset: 100,
+            });
+            return;
+          }
+          storejs.set('user', { userInfo: res.data.data, token: res.data.token });
+          this.$notify({
+            title: '提示',
+            message: '登录成功',
+            type: 'success',
+            offset: 100,
+          });
+          this.$store.dispatch('getUserInfo', res.data.data);
+          this.$_jumpToOther(1);
+        }).catch((err) => {
+          throw err;
+        });
+        return;
+      }
+      userApi.register(this.ruleForm).then((res) => {
+        console.log(res);
+        if (res.data.errno === 133333) {
+          this.$notify.error({
+            title: '提示',
+            message: res.data.errmsg,
+            offset: 100,
+          });
+          return;
+        }
+        this.$notify({
+          title: '提示',
+          message: '注册成功',
+          type: 'success',
+          offset: 100,
+        });
+        this.$_jumpToOther(0);
+      }).catch((err) => {
+        throw err;
+      });
+    },
     $_jumpToOther(signed) {
       if (signed > 0) {
         this.$router.push({ name: 'Home' });

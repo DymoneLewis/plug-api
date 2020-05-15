@@ -5,58 +5,118 @@
       :interval="5000"
       arrow="always"
       trigger="click">
-      <el-carousel-item v-for="item in 4" :key="item">
-        <h3>{{ item }}</h3>
+      <el-carousel-item>
+        <img class="carousel-img" src="../../public/p1.jpg"/>
+      </el-carousel-item>
+      <el-carousel-item>
+        <img class="carousel-img" src="../../public/p0.jpg"/>
+      </el-carousel-item>
+      <el-carousel-item>
+        <img class="carousel-img" src="../../public/p2.jpg"/>
       </el-carousel-item>
     </el-carousel>
     <div class="fast-entry">
       <h1>Fast Entry</h1>
       <el-row :gutter="20">
-        <el-col :span="6"><div class="fast-entry-item">权限申请</div></el-col>
-        <el-col :span="6"><div class="fast-entry-item">我的工作台</div></el-col>
-        <el-col :span="6"><div class="fast-entry-item">API搜索</div></el-col>
-        <el-col :span="6"><div class="fast-entry-item">文档中心</div></el-col>
+        <el-col :span="6">
+          <div class="fast-entry-item">
+            <router-link :to="{name: 'Permission'}">权限申请</router-link>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="fast-entry-item">
+            <router-link :to="{name: 'MyWorkbench'}">我的工作台</router-link>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="fast-entry-item">
+            <router-link :to="{name: 'ApiList'}">API搜索</router-link>
+          </div>
+        </el-col>
+        <!-- <el-col :span="6">
+          <div class="fast-entry-item">
+            <router-link :to="{name: ''}">文档中心</router-link>
+          </div>
+        </el-col> -->
       </el-row>
       <h1>Api Recommendation</h1>
       <el-row :gutter="20">
         <el-col :span="12" v-for="item in hotApiList" :key="item.id">
-          <ApiCard :apiInfo="item" class="api-recommend-item"/>
+          <div @click="$_handleClick(item)">
+            <ApiCard :apiInfo="item" class="api-recommend-item"/>
+          </div>
         </el-col>
       </el-row>
     </div>
+    <el-dialog
+      title="Api详情"
+      :visible.sync="dialogVisible"
+      width="90%"
+      append-to-body
+      destroy-on-close
+    >
+      <ApiCard
+      :isSmallCard="false"
+      :apiInfo="getCurrentApiInfo"
+      />
+    </el-dialog>
   </div>
 </template>
 <script>
 import ApiCard from '@/components/ApiCard';
 import * as apiServer from '@/service/api';
+// import * as commonServer from '@/service/common';
 
 export default {
   name: 'Home',
   components: {
     ApiCard,
   },
+  computed: {
+    getCurrentApiInfo() {
+      return this.$data.currentApiInfo;
+    },
+  },
   data() {
     return {
       activeIndex: '1',
       activeIndex2: '1',
+      currentApiInfo: {},
       hotApiList: [],
+      dialogVisible: false,
     };
   },
   mounted() {
-    this.getApiInfo();
+    this.getHotApiInfo();
   },
   methods: {
-    getApiInfo() {
-      apiServer.getApiInfo().then((res) => {
+    getHotApiInfo() {
+      apiServer.getHotApiInfo().then((res) => {
         this.hotApiList = res.data;
       }).catch((err) => {
         throw err;
       });
     },
+    $_handleClick(payload) {
+      this.$data.currentApiInfo = payload;
+      this.dialogVisible = true;
+    },
   },
 };
 </script>
-<style lang="less">
+<style lang="less" scope>
+.router-link {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 20px;
+  background-image: -webkit-linear-gradient(left, #3ba3d0, #4380d3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.carousel-img {
+  height: 100%;
+  width: 100%;
+}
 .fast-entry {
   margin:30px 0 50px 0;
   // height: 180px;s

@@ -2,14 +2,11 @@ import Vue from 'vue';
 import _ from 'lodash';
 
 const initalState = {
-  userInfo: {
-    userId: 0,
-    account: '',
-    userName: '',
-    avatar: '',
-    role: [],
-    introduce: '',
-  },
+  account: '',
+  username: '',
+  head: '',
+  role: '',
+  introduction: '',
 };
 
 const getters = {
@@ -19,33 +16,22 @@ const getters = {
 };
 
 const mutations = {
-  setUserInfo(state, payload = {}) {
-    const {
-      userId = 0,
-      account,
-      userName,
-      avatar,
-      role = [],
-      introduce = '这个家伙很懒，什么都没留下',
-    } = payload;
-
-    state.userInfo = {
-      userId,
-      account,
-      userName,
-      avatar,
-      role,
-      introduce,
-    };
+  initUserInfo(state, payload = {}) {
+    _.assign(state, payload);
   },
-  updateUserInfo(state,payload = {}) {
+  updateUserInfo(state, payload = {}) {
     _.forEach(payload, (value, key) => {
-      Vue.set(state.userInfo, key, value);
+      Vue.set(state, key, value);
     });
   },
 };
 
-const actions = {};
+const actions = {
+  getUserInfo({ commit }, data) {
+    commit('updateUserInfo', data);
+    return '';
+  },
+};
 
 export default {
   namespaces: true,
@@ -53,4 +39,4 @@ export default {
   getters,
   mutations,
   actions,
-}
+};

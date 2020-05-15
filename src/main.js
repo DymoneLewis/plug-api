@@ -12,6 +12,8 @@ import MyWorkbench from '@/page/MyWorkbench';
 // import Document from '@/page/Document';
 import Login from '@/page/Login';
 import Home from '@/page/Home';
+import Permission from '@/page/Permission';
+import store from '@/store';
 import App from './App';
 
 // Vue.prototype.$http = Axios;
@@ -31,11 +33,12 @@ const router = new VueRouter({
     { path: '/apiDetail', name: 'ApiDetail', component: ApiDetail },
     { path: '/myWorkbench', name: 'MyWorkbench', component: MyWorkbench },
     // { path: '/documents', name: 'Documents', component: Document },
-    { path: '/apiDetail', name: 'ApiDetail', component: ApiDetail },
+    { path: '/permission', name: 'Permission', component: Permission },
   ],
 });
 
 new Vue({
   router,
   render: (h) => h(App),
+  store,
 }).$mount('#app');
